@@ -1,0 +1,13 @@
+# Local eval environment
+.venv/
+__pycache__/
+*.pyc
+
+# aicomp evaluator artifacts
+artifacts/
+evaluation_artifacts/
+.aicomp/
+*.log
+framework.jsonl
+agent-debug.jsonl
+transcript.log
