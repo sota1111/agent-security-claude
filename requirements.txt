@@ -1,0 +1,5 @@
+# AI Agent Security Competition — red-team attack harness dependencies.
+# Pin the competition SDK; it pulls its own transitive deps (gymnasium, torch,
+# transformers, openai, ...). Kaggle provides these at runtime; this file lets
+# a local eval environment reproduce the SDK version used for scoring.
+aicomp-sdk>=3.1.2
