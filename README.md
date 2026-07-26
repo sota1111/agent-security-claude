@@ -15,7 +15,7 @@ predicates/cell signatures, and scores only the replayed traces.
 
 | Path | Purpose |
 | --- | --- |
-| `attack.py` | The submission. Champion (SOT-1968) = hybrid: a deterministic curated multi-step floor (guaranteeing no regression vs the starter) + the SDK Go-Explore novelty search for extra unique breaching cells. |
+| `attack.py` | The submission. Starter = time-boxed prompt-bank search using the SDK's `eval_predicates` as the breach detector. |
 | `requirements.txt` | Pins `aicomp-sdk>=3.1.2` (competition SDK). |
 | `scripts/eval.sh` | Thin wrapper over `aicomp validate/test/evaluate redteam`. |
 | `docs/kpi.md` | KPI log — one row per local eval run (normalized attack score). |
@@ -60,10 +60,8 @@ Record the normalized attack score printed by `evaluate` into `docs/kpi.md`.
 
 This repo is the C1 bootstrap for the SOT-1961 順位向上サイクル:
 
-- **C1 (SOT-1967):** valid `attack.py` starter + local eval harness + KPI log.
-- **C2 (SOT-1968, DONE):** champion established — hybrid `curated-floor + go-explore`,
-  PROMOTED via screen→confirm on the beatable rules-guardrail proxy (the sanctioned
-  `optimal_public` eval is saturated at 0 for all strategies). See `docs/kpi.md`.
+- **C1 (this issue, SOT-1967):** valid `attack.py` starter + local eval harness + KPI log.
+- **C2:** establish a champion attack strategy (stronger search than the starter).
 - **C3:** real Kaggle submission of the champion.
 
 Screen a candidate strategy with a short `--budget-s` eval; only promote it to
