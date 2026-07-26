@@ -1,0 +1,14 @@
+{
+  "id": "sota1111/agent-security-claude-cli-baseline",
+  "title": "Agent Security Claude CLI baseline",
+  "code_file": "submit.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_internet": false,
+  "competition_sources": ["ai-agent-security-multi-step-tool-attacks"],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

@@ -43,6 +43,30 @@ seeds, but proxy results do not override the Issue's official normalized-score
 promotion gate. Confirm used seeds independent of screen (CI重複なら独立seed
 追検証必須).
 
+## Kaggle submission log (real submissions)
+
+Competition `ai-agent-security-multi-step-tool-attacks` is a **Kaggle code
+competition**: submissions must go through a notebook/kernel that serves the
+`JEDAttackInferenceServer` (the graded rerun loads the attacker's
+`/kaggle/working/attack.py`). A direct `kaggle competitions submit -f attack.py`
+is rejected with **HTTP 400**. The claude submission path is
+`kaggle/kernel/` (`kernel-metadata.json` + `submit.py`), where `submit.py`
+materialises the champion `attack.py` **verbatim via base64** (so the submitted
+strategy == the locally-evaluated champion) before serving the inference server.
+
+| Date (UTC) | Issue | Kernel (version) | Kaggle ref | Public score | Notes |
+| --- | --- | --- | --- | --- | --- |
+| 2026-07-26 | SOT-1969 | `sota1111/agent-security-claude-cli-baseline` (v1) | 54991471 | PENDING | First real claude submission. Champion = exec-compatible prompt-bank starter (SOT-1968 retained baseline). Kernel COMPLETE; submission accepted (async code-competition rerun grading; sibling gpt lineage grades to 0.000 vs the hidden guardrails). |
+
+Submit command (for reproduction):
+
+```bash
+kaggle kernels push -p kaggle/kernel
+kaggle kernels status sota1111/agent-security-claude-cli-baseline   # wait for COMPLETE
+kaggle competitions submit -c ai-agent-security-multi-step-tool-attacks \
+  -k sota1111/agent-security-claude-cli-baseline -v 1 -f submission.csv -m "<msg>"
+```
+
 ## Conventions
 
 - **Strategy**: short name of the `attack.py` search (e.g. `prompt-bank starter`, `hybrid floor + go-explore`).

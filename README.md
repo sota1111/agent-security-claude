@@ -19,7 +19,8 @@ predicates/cell signatures, and scores only the replayed traces.
 | `requirements.txt` | Pins `aicomp-sdk>=3.1.2` (competition SDK). |
 | `scripts/eval.sh` | Thin wrapper over `aicomp validate/test/evaluate redteam`. |
 | `scripts/test_exec_compat.py` | Executes the exact `attack.py` with no `__file__`/`__name__` and a changed cwd. |
-| `docs/kpi.md` | KPI log — one row per local eval run (normalized attack score). |
+| `kaggle/kernel/` | Kaggle code-competition submission kernel (`submit.py` embeds the champion `attack.py` verbatim via base64 and serves `JEDAttackInferenceServer`). |
+| `docs/kpi.md` | KPI log — local eval rows + the Kaggle submission log (real refs/scores). |
 
 ## Setup (local, inside the Dev Container)
 
