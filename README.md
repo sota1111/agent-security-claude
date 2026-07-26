@@ -18,7 +18,9 @@ predicates/cell signatures, and scores only the replayed traces.
 | `attack.py` | The submission. Starter = time-boxed prompt-bank search using the SDK's `eval_predicates` as the breach detector. |
 | `requirements.txt` | Pins `aicomp-sdk>=3.1.2` (competition SDK). |
 | `scripts/eval.sh` | Thin wrapper over `aicomp validate/test/evaluate redteam`. |
-| `docs/kpi.md` | KPI log — one row per local eval run (normalized attack score). |
+| `scripts/test_exec_compat.py` | Executes the exact `attack.py` with no `__file__`/`__name__` and a changed cwd. |
+| `kaggle/kernel/` | Kaggle code-competition submission kernel (`submit.py` embeds the champion `attack.py` verbatim via base64 and serves `JEDAttackInferenceServer`). |
+| `docs/kpi.md` | KPI log — local eval rows + the Kaggle submission log (real refs/scores). |
 
 ## Setup (local, inside the Dev Container)
 
@@ -55,6 +57,13 @@ Equivalent raw commands:
 ```
 
 Record the normalized attack score printed by `evaluate` into `docs/kpi.md`.
+
+Before a real submission, run the Kaggle exec-compatibility gate against the
+same `attack.py` that will be uploaded:
+
+```bash
+.venv/bin/python scripts/test_exec_compat.py
+```
 
 ## Improvement loop (screen → confirm)
 
