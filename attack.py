@@ -135,7 +135,7 @@ class AttackAlgorithm(AttackAlgorithmBase):
         return tuple(chain)
 
 
-if __name__ == "__main__":
+if globals().get("__name__") == "__main__":
     # Local smoke test against the packaged fixtures + deterministic agent.
     from pathlib import Path
 
