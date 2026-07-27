@@ -102,7 +102,8 @@ strategy == the locally-evaluated champion) before serving the inference server.
 
 | Date (UTC) | Issue | Kernel (version) | Kaggle ref | Public score | Notes |
 | --- | --- | --- | --- | --- | --- |
-| 2026-07-26 | SOT-1969 | `sota1111/agent-security-claude-cli-baseline` (v1) | 54991471 | PENDING | First real claude submission. Champion = exec-compatible prompt-bank starter (SOT-1968 retained baseline). Kernel COMPLETE; submission accepted (async code-competition rerun grading; sibling gpt lineage grades to 0.000 vs the hidden guardrails). |
+| 2026-07-26 | SOT-1969 | `sota1111/agent-security-claude-cli-baseline` (v1) | 54991471 | 0.000 | First real claude submission. Champion = exec-compatible prompt-bank starter (SOT-1968 retained baseline). Kernel COMPLETE; submission accepted and grading COMPLETE. |
+| 2026-07-27 | SOT-2025 | duplicate of v1 — skipped | 54991471 (unchanged) | 0.000 | SOT-2024 did not promote its candidate, so the prompt-bank starter remains champion. The base64 payload in `kaggle/kernel/submit.py` is byte-identical to `attack.py` (SHA-256 `706de545fbcaac1a8785001a5213cdd2d48dadeae75321b961e865a167aa4e60`) and therefore identical to the v1 payload already accepted under ref 54991471. No kernel push or competition submission was made, avoiding a duplicate. Exec compatibility rechecked green. |
 
 Submit command (for reproduction):
 
