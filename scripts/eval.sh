@@ -5,6 +5,7 @@
 #   scripts/eval.sh validate                       # aicomp validate redteam attack.py
 #   scripts/eval.sh test  [extra aicomp args...]   # aicomp test  redteam attack.py ...
 #   scripts/eval.sh evaluate [extra aicomp args...]# aicomp evaluate redteam attack.py ...
+#   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
 #
 # Prefers ./.venv/bin/aicomp; falls back to aicomp on PATH.
 set -euo pipefail
@@ -14,8 +15,10 @@ cd "$repo_root"
 
 if [[ -x "$repo_root/.venv/bin/aicomp" ]]; then
   AICOMP="$repo_root/.venv/bin/aicomp"
+  PYTHON="$repo_root/.venv/bin/python"
 else
   AICOMP="aicomp"
+  PYTHON="${PYTHON:-python3}"
 fi
 
 sub="${1:-}"
@@ -31,8 +34,11 @@ case "$sub" in
   evaluate)
     exec "$AICOMP" evaluate redteam attack.py "$@"
     ;;
+  proxy)
+    exec "$PYTHON" scripts/score_proxy.py "$@"
+    ;;
   *)
-    echo "usage: scripts/eval.sh {validate|test|evaluate} [aicomp args...]" >&2
+    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy} [args...]" >&2
     exit 2
     ;;
 esac
