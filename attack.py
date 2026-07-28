@@ -2,7 +2,8 @@
 
 Competition: ``ai-agent-security-multi-step-tool-attacks`` (red-team / attack-only).
 
-C3 champion (SOT-2081): a two-phase hybrid search whose phase-1 floor is a
+C3 champion (implemented in SOT-2081, promoted in SOT-2082): a two-phase hybrid
+search whose phase-1 floor is a
 **seed-independent true lower bound** on the SOT-1967 prompt-bank starter, so the
 champion never regresses below the starter on any seed.
 

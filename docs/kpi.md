@@ -17,6 +17,10 @@ diagnostic only because it returns 0.00 for every locally tested strategy.
 | 2026-07-27 | 007061b restored | hybrid curated-floor + go-explore | confirm | deterministic | gym | 30 | 5, 21, 44 | 2.7200 | N/A | Per-seed: 4.08, 3.57, 0.51; mean passes, seed 44 regresses |
 | 2026-07-28 | SOT-2081 guaranteed floor | hybrid guaranteed-floor + go-explore | screen | deterministic | gym | 25 | 123, 7, 99 | 2.4800 | N/A | Per-seed: 3.50, 2.14, 1.80; **every seed ≥ starter**, seed 99 regression fixed |
 | 2026-07-28 | SOT-2081 guaranteed floor | hybrid guaranteed-floor + go-explore | confirm | deterministic | gym | 30 | 5, 21, 44 | 6.2767 | N/A | Per-seed: 9.11, 7.75, 1.97; **every seed ≥ starter**, seed 44 regression fixed |
+| 2026-07-28 | SOT-2082 promotion | prompt-bank starter | screen | deterministic | gym | 25 | 123, 7, 99 | 0.6667 | N/A | Same env/SDK/budget baseline measured first; per-seed: 0.84, 0.34, 0.82 |
+| 2026-07-28 | SOT-2082 promotion | prompt-bank starter | confirm | deterministic | gym | 30 | 5, 21, 44 | 0.5567 | N/A | Independent confirm seeds; per-seed: 0.50, 0.51, 0.66 |
+| 2026-07-28 | SOT-2082 promotion | hybrid guaranteed-floor + go-explore | screen | deterministic | gym | 25 | 123, 7, 99 | 2.4800 | N/A | Per-seed: 3.50, 2.14, 1.80; mean and every seed ≥ starter — promotion gate PASS |
+| 2026-07-28 | SOT-2082 promotion | hybrid guaranteed-floor + go-explore | confirm | deterministic | gym | 30 | 5, 21, 44 | 6.2767 | N/A | Independent per-seed: 9.11, 7.75, 1.97; mean and every seed ≥ starter — promotion gate PASS |
 
 ## Promotion gate
 
@@ -44,11 +48,27 @@ scripts/eval.sh proxy all \
 `scripts/eval.sh evaluate --env gym` remains available to record the
 `optimal_public` oracle diagnostic, but that 0.00 value is not a promotion gate.
 
-## Champion status (SOT-1968): **NOT PROMOTED** — baseline retained
+## Champion status (SOT-2082): **PROMOTED** — hybrid guaranteed-floor + Go-Explore
+
+SOT-2082 promoted the SOT-2081 candidate after a fresh same-environment
+screen→confirm comparison against the starter. Both stage means exceed the
+starter and every individual seed is non-regressing:
+
+| Stage | Budget (s) | Seeds | starter avg | champion avg | Per-seed (champion vs starter) |
+| --- | --- | --- | --- | --- | --- |
+| screen | 25 | 123, 7, 99 | 0.6667 | **2.4800** | 3.50/2.14/1.80 vs 0.84/0.34/0.82 |
+| confirm | 30 | 5, 21, 44 | 0.5567 | **6.2767** | 9.11/7.75/1.97 vs 0.50/0.51/0.66 |
+
+Confirm uses seeds independent of screen. The champion is the checked-in
+`attack.py`, and `kaggle/kernel/submit.py` embeds that file byte-for-byte for
+the next real submission (SOT-2083).
+
+## Historical champion status (SOT-1968): **NOT PROMOTED** — baseline retained
 
 The candidate was previously rejected under the old oracle gate and reverted,
-so `attack.py` remains the SOT-1967 starter. Future promotion decisions use the
-beatable-rules proxy gate above; historical oracle results remain diagnostic.
+so `attack.py` remained the SOT-1967 starter at that time. Later promotion
+decisions use the beatable-rules proxy gate above; historical oracle results
+remain diagnostic.
 
 **Why the sanctioned `evaluate` could not distinguish these strategies locally.**
 The only
@@ -142,8 +162,8 @@ meets or beats the starter** (`diag_floor.py cover` reports `⊇=True`, missing 
 Go-Explore upside is preserved (indeed higher). Exec compatibility is retained
 (`scripts/test_exec_compat.py` PASS, `aicomp validate redteam attack.py` PASS).
 
-Per SOT-2081 scope this issue implements and proves the guaranteed floor only;
-the promotion decision is deferred to SOT-2082 and real submission to SOT-2083.
+Per SOT-2081 scope that issue implemented and proved the guaranteed floor only.
+SOT-2082 has now promoted it; real submission remains scoped to SOT-2083.
 
 ## Kaggle submission log (real submissions)
 
