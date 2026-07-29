@@ -7,6 +7,7 @@
 #   scripts/eval.sh evaluate [extra aicomp args...]# aicomp evaluate redteam attack.py ...
 #   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
 #   scripts/eval.sh real-agent [real-agent args...]  # LLM transfer measurement
+#   scripts/eval.sh real-agent --strong-model qwen-1.5b ... # stronger stand-in
 #
 # Prefers ./.venv/bin/aicomp; falls back to aicomp on PATH.
 set -euo pipefail
