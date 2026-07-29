@@ -12,3 +12,9 @@
 The official rank is shared by the GPT and Claude repositories because both submit under the same Kaggle team. The score is the latest completed submission identifiable as this lineage at the observation time.
 
 Source: Kaggle CLI `competitions list` and `competitions submissions`. Earlier official-rank snapshots were not retained, so they are not reconstructed or estimated.
+
+## Submission decisions
+
+| Date (UTC) | Issue | Decision | Kaggle ref | Status / score | Reason |
+| --- | --- | --- | ---: | --- | --- |
+| 2026-07-29 | SOT-2149 | Duplicate skip | 55056847 | Previously pending / score unavailable | Independent-seed confirm did not promote any transfer candidate. The retained champion and embedded kernel payload remain byte-identical to the v3 submission (`e6d75d4b…`), so no duplicate push or submission was warranted. Kaggle credentials were unavailable for a fresh status query. |
