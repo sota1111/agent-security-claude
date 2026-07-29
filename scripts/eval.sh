@@ -6,6 +6,7 @@
 #   scripts/eval.sh test  [extra aicomp args...]   # aicomp test  redteam attack.py ...
 #   scripts/eval.sh evaluate [extra aicomp args...]# aicomp evaluate redteam attack.py ...
 #   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
+#   scripts/eval.sh real-agent [real-agent args...]  # LLM transfer measurement
 #
 # Prefers ./.venv/bin/aicomp; falls back to aicomp on PATH.
 set -euo pipefail
@@ -37,8 +38,11 @@ case "$sub" in
   proxy)
     exec "$PYTHON" scripts/score_proxy.py "$@"
     ;;
+  real-agent)
+    exec "$PYTHON" scripts/score_real_agent.py "$@"
+    ;;
   *)
-    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy} [args...]" >&2
+    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent} [args...]" >&2
     exit 2
     ;;
 esac

@@ -1,5 +1,6 @@
 # Local eval environment
 .venv/
+.models/
 __pycache__/
 *.pyc
 

@@ -3,3 +3,5 @@
 # transformers, openai, ...). Kaggle provides these at runtime; this file lets
 # a local eval environment reproduce the SDK version used for scoring.
 aicomp-sdk>=3.1.2
+# Required by the SDK's Hugging Face backends when device_map="auto".
+accelerate>=1.0
