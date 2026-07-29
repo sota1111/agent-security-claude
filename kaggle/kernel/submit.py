@@ -25,7 +25,10 @@ from kaggle_evaluation.jed_attack_134815.jed_attack_inference_server import (
 )
 
 server = JEDAttackInferenceServer()
-if os.getenv("KAGGLE_IS_COMPETITION_RERUN"):
+# Kaggle defines this variable during a scored rerun, but its value may be the
+# empty string.  Test presence rather than truthiness or the inference server is
+# skipped and the placeholder zero-score CSV is graded as the submission.
+if os.getenv("KAGGLE_IS_COMPETITION_RERUN") is not None:
     server.serve()
 else:
     with open("/kaggle/working/submission.csv", "w", newline="") as handle:

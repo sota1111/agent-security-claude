@@ -21,6 +21,8 @@ diagnostic only because it returns 0.00 for every locally tested strategy.
 | 2026-07-28 | SOT-2082 promotion | prompt-bank starter | confirm | deterministic | gym | 30 | 5, 21, 44 | 0.5567 | N/A | Independent confirm seeds; per-seed: 0.50, 0.51, 0.66 |
 | 2026-07-28 | SOT-2082 promotion | hybrid guaranteed-floor + go-explore | screen | deterministic | gym | 25 | 123, 7, 99 | 2.4800 | N/A | Per-seed: 3.50, 2.14, 1.80; mean and every seed ≥ starter — promotion gate PASS |
 | 2026-07-28 | SOT-2082 promotion | hybrid guaranteed-floor + go-explore | confirm | deterministic | gym | 30 | 5, 21, 44 | 6.2767 | N/A | Independent per-seed: 9.11, 7.75, 1.97; mean and every seed ≥ starter — promotion gate PASS |
+| 2026-07-29 | SOT-2134 rerun fix | hybrid guaranteed-floor + go-explore | screen | deterministic | gym | 25 | 123, 7, 99 | 2.4800 | N/A | Official SDK path; intrusion success 3/3 seeds (100%), objective achievement 3/3 seeds (100%); per-seed findings 21/13/11 and unique cells 14/6/4 |
+| 2026-07-29 | SOT-2134 rerun fix | hybrid guaranteed-floor + go-explore | confirm | deterministic | gym | 30 | 5, 21, 44 | 6.5033 | N/A | Official SDK path; intrusion success 3/3 seeds (100%), objective achievement 3/3 seeds (100%); per-seed findings 58/46/12 and unique cells 51/39/5 |
 
 ## Promotion gate
 
@@ -181,6 +183,14 @@ strategy == the locally-evaluated champion) before serving the inference server.
 | 2026-07-26 | SOT-1969 | `sota1111/agent-security-claude-cli-baseline` (v1) | 54991471 | 0.000 | First real claude submission. Champion = exec-compatible prompt-bank starter (SOT-1968 retained baseline). Kernel COMPLETE; submission accepted and grading COMPLETE. |
 | 2026-07-27 | SOT-2025 | duplicate of v1 — skipped | 54991471 (unchanged) | 0.000 | SOT-2024 did not promote its candidate, so the prompt-bank starter remains champion. The base64 payload in `kaggle/kernel/submit.py` is byte-identical to `attack.py` (SHA-256 `706de545fbcaac1a8785001a5213cdd2d48dadeae75321b961e865a167aa4e60`) and therefore identical to the v1 payload already accepted under ref 54991471. No kernel push or competition submission was made, avoiding a duplicate. Exec compatibility rechecked green. |
 | 2026-07-28 | SOT-2083 | `sota1111/agent-security-claude-cli-baseline` (v3) | 55056847 | pending | SOT-2082 promoted champion submitted after kernel COMPLETE. The embedded payload and `attack.py` are byte-identical (SHA-256 `e6d75d4bdd00bb426b1f26836995e2ecfc90296482ce1ade83536f6edac2407c`); exec compatibility rechecked green. Kaggle accepted the submission at 13:59 UTC, but grading remained PENDING throughout the post-submit polling window, so no public score was available to record yet. |
+
+SOT-2134 later observed ref `55056847` complete at `0.000`. Its kernel log
+contained the decisive warning: `JEDAttackInferenceServer was created but run()
+was never called`. Kaggle defines `KAGGLE_IS_COMPETITION_RERUN` during scoring
+but may give it an empty value; the v3 entrypoint tested the value's truthiness
+and therefore wrote its local placeholder zero-score CSV instead of starting
+the inference server. The SOT-2134 candidate preserves the same locally proven
+attack and fixes the kernel to test environment-variable presence.
 
 Submit command (for reproduction):
 
