@@ -5,3 +5,8 @@
 aicomp-sdk>=3.1.2
 # Required by the SDK's Hugging Face backends when device_map="auto".
 accelerate>=1.0
+# Loads the checked-in Gemma 3 provisioning target in NF4 on 12 GB GPUs.
+bitsandbytes>=0.46,<0.50
+# Gemma 3 uses a multimodal processor even for text-only grader prompts.
+Pillow>=10
+torchvision>=0.20

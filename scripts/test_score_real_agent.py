@@ -5,10 +5,16 @@ from __future__ import annotations
 
 import unittest
 
-from score_real_agent import TrialResult, summarize
+from score_real_agent import REAL_GRADERS, TrialResult, summarize
 
 
 class SummarizeTests(unittest.TestCase):
+    def test_real_grader_is_revision_pinned(self) -> None:
+        model_id, model_path, revision = REAL_GRADERS["gemma-3-4b-nf4"]
+        self.assertEqual(model_id, "unsloth/gemma-3-4b-it-bnb-4bit")
+        self.assertEqual(model_path.name, "gemma-3-4b-it-bnb-4bit")
+        self.assertRegex(revision, r"^[0-9a-f]{40}$")
+
     def test_rates_use_trials_as_denominator(self) -> None:
         results = [
             TrialResult(
