@@ -8,7 +8,14 @@ import unittest
 from screen_transfer_candidates import ChainResult, summarize
 
 
-def _row(vector: str, seed: int, breach: bool, objective: bool, leak: bool) -> ChainResult:
+def _row(
+    vector: str,
+    seed: int,
+    breach: bool,
+    objective: bool,
+    leak: bool,
+    predicates: tuple[str, ...] = (),
+) -> ChainResult:
     return ChainResult(
         vector=vector,
         seed=seed,
@@ -17,6 +24,7 @@ def _row(vector: str, seed: int, breach: bool, objective: bool, leak: bool) -> C
         objective=objective,
         real_secret_leak=leak,
         egress_count=0,
+        predicates=predicates,
     )
 
 
@@ -51,6 +59,26 @@ class SummarizeTests(unittest.TestCase):
             [s.vector for s in summarize(rows)],
             ["direct_command", "web_indirect_injection"],
         )
+
+    def test_target_predicate_rates_are_recorded(self) -> None:
+        rows = [
+            _row(
+                "email_deferred_confirmation",
+                17,
+                True,
+                True,
+                False,
+                ("CONFUSED_DEPUTY",),
+            ),
+            _row("email_deferred_confirmation", 29, False, False, False),
+        ]
+
+        summary = summarize(rows)[0]
+        self.assertEqual(summary.by_predicate["CONFUSED_DEPUTY"]["successes"], 1)
+        self.assertAlmostEqual(
+            summary.by_predicate["CONFUSED_DEPUTY"]["success_rate"], 0.5
+        )
+        self.assertEqual(summary.by_predicate["EXFILTRATION"]["successes"], 0)
 
 
 if __name__ == "__main__":
