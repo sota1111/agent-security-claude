@@ -8,6 +8,7 @@
 #   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
 #   scripts/eval.sh real-agent [real-agent args...]  # LLM transfer measurement
 #   scripts/eval.sh real-agent --strong-model qwen-1.5b ... # stronger stand-in
+#   scripts/eval.sh provision-real-grader             # download + GPU smoke test
 #
 # Prefers ./.venv/bin/aicomp; falls back to aicomp on PATH.
 set -euo pipefail
@@ -42,8 +43,11 @@ case "$sub" in
   real-agent)
     exec "$PYTHON" scripts/score_real_agent.py "$@"
     ;;
+  provision-real-grader)
+    exec "$PYTHON" scripts/provision_real_grader.py "$@"
+    ;;
   *)
-    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent} [args...]" >&2
+    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent|provision-real-grader} [args...]" >&2
     exit 2
     ;;
 esac

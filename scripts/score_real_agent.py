@@ -41,6 +41,13 @@ STRONG_STAND_INS = {
         Path(".models/qwen2.5-3b-instruct"),
     ),
 }
+REAL_GRADERS = {
+    "gemma-3-4b-nf4": (
+        "unsloth/gemma-3-4b-it-bnb-4bit",
+        Path(".models/gemma-3-4b-it-bnb-4bit"),
+        "eb03c885bc2cc913fe792994bc766006f14ad72d",
+    ),
+}
 
 
 @dataclass(frozen=True)
@@ -172,6 +179,28 @@ def summarize(results: list[TrialResult]) -> dict[str, Any]:
     }
 
 
+def hardware_fingerprint() -> dict[str, Any]:
+    """Return reproducibility metadata without making CUDA mandatory for tests."""
+    try:
+        import torch
+
+        if not torch.cuda.is_available():
+            return {"device": "cpu", "cuda_available": False}
+        device = torch.cuda.current_device()
+        properties = torch.cuda.get_device_properties(device)
+        return {
+            "device": f"cuda:{device}",
+            "cuda_available": True,
+            "gpu_name": properties.name,
+            "gpu_vram_bytes": properties.total_memory,
+            "cuda_version": torch.version.cuda,
+            "peak_allocated_bytes": torch.cuda.max_memory_allocated(device),
+            "peak_reserved_bytes": torch.cuda.max_memory_reserved(device),
+        }
+    except (ImportError, RuntimeError) as error:
+        return {"device": "unknown", "cuda_available": False, "error": str(error)}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--champion", type=Path, default=Path("attack.py"))
@@ -203,6 +232,11 @@ def build_parser() -> argparse.ArgumentParser:
             "--model-path/--model-id may override either value"
         ),
     )
+    parser.add_argument(
+        "--real-grader",
+        choices=tuple(REAL_GRADERS),
+        help="Select a provisioned grading-model approximation and record its revision",
+    )
     parser.add_argument("--seeds", type=parse_seeds, default=(17, 29, 43))
     parser.add_argument("--budget", type=float, default=30.0)
     parser.add_argument("--proxy-score", type=float, default=6.2767)
@@ -218,6 +252,13 @@ def main(argv: list[str] | None = None) -> int:
         strong_model_id, strong_model_path = STRONG_STAND_INS[args.strong_model]
         args.model_id = args.model_id or strong_model_id
         args.model_path = args.model_path or strong_model_path
+    model_revision = None
+    quantization = None
+    if args.real_grader:
+        model_id, model_path, model_revision = REAL_GRADERS[args.real_grader]
+        args.model_id = args.model_id or model_id
+        args.model_path = args.model_path or model_path
+        quantization = "bitsandbytes-nf4-double-quant"
     if args.model_path is not None and not args.model_path.is_dir():
         raise SystemExit(
             f"--model-path does not exist: {args.model_path}; download the model first"
@@ -256,6 +297,8 @@ def main(argv: list[str] | None = None) -> int:
             "model_path": str(args.model_path.resolve()) if args.model_path else None,
             "model_id": args.model_id
             or (args.model_path.name if args.model_path else args.agent),
+            "model_revision": model_revision,
+            "quantization": quantization,
             "champion_attack": str(args.champion),
             "starter_attack": (
                 str(args.starter)
@@ -273,6 +316,7 @@ def main(argv: list[str] | None = None) -> int:
             "python_version": platform.python_version(),
             "temperature": 0,
             "sampling": False,
+            "hardware": hardware_fingerprint(),
         },
         "definitions": {
             "trial": "one eval_attack invocation for one strategy and seed",
