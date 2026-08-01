@@ -24,3 +24,4 @@ jobs:
       - run: python scripts/test_screen_transfer_candidates.py
       - run: python scripts/test_real_grader_adapter.py
       - run: python scripts/test_screen_adapter_fix.py
+      - run: python scripts/test_screen_unfenced_steering.py
