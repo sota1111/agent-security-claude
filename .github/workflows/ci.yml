@@ -22,3 +22,5 @@ jobs:
       - run: python scripts/test_exec_compat.py
       - run: python scripts/test_score_real_agent.py
       - run: python scripts/test_screen_transfer_candidates.py
+      - run: python scripts/test_real_grader_adapter.py
+      - run: python scripts/test_screen_adapter_fix.py
