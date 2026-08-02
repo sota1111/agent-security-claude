@@ -30,6 +30,12 @@ shift || true
 
 case "$sub" in
   validate)
+    # Stale-kernel guard (SOT-2318): before validating attack.py, assert the Kaggle
+    # submission kernel embeds a byte-identical copy of it. The graded rerun ships
+    # whatever kaggle/kernel/submit.py re-materialises, so a drifted _ATTACK_PY_B64
+    # would silently submit a different strategy than the one being validated here
+    # (the standing cause of public LB 0.000). Stdlib-only unittest, sub-second.
+    "$PYTHON" scripts/test_kernel_payload_identity.py
     exec "$AICOMP" validate redteam attack.py "$@"
     ;;
   test)
