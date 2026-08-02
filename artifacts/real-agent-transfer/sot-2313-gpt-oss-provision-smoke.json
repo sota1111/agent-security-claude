@@ -1,0 +1,86 @@
+{
+  "fallback_target": "qwen-3b",
+  "gpu": {
+    "cuda_available": true,
+    "gpu_name": "NVIDIA GeForce RTX 3080 Ti",
+    "gpu_vram_bytes": 12479758336
+  },
+  "issue": "SOT-2313",
+  "primary_target": "gpt_oss",
+  "schema": "grader-agent-provision-smoke/v1",
+  "targets": [
+    {
+      "adapter_smokes": [],
+      "blocker": "insufficient VRAM: weights ~41273504288 bytes exceed GPU VRAM ~12479758336 bytes (need <= ~11345234850 bytes). Download skipped; pass --force-load to attempt anyway.",
+      "gpu": {
+        "cuda_available": true,
+        "gpu_name": "NVIDIA GeForce RTX 3080 Ti",
+        "gpu_vram_bytes": 12479758336
+      },
+      "grader_family": "gpt_oss",
+      "model_fingerprint_sha256": "50dfa45e35b55449660a985d6456d0d84f5c3a14864aa5fe8620b7878e618cdb",
+      "model_id": "openai/gpt-oss-20b",
+      "model_revision": "6cee5e81ee83917806bbde320786a8fb61efebee",
+      "note": "second graded family; MXFP4 20B, needs a large-VRAM GPU",
+      "started": false,
+      "target": "gpt_oss",
+      "vram_feasible_estimate": false,
+      "weight_bytes": 41273504288
+    },
+    {
+      "adapter_smokes": [
+        {
+          "adapter": "gemma",
+          "blocker": null,
+          "first_tool_name": "fs.read",
+          "grader_family": "gpt_oss",
+          "loaded": true,
+          "model_fingerprint_sha256": "6fee5f62b46ae3ce670d16adf253560ff839fd3b4de00eb7289c94558e591982",
+          "model_id": "Qwen/Qwen2.5-3B-Instruct",
+          "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+          "parser_class": "JsonEnvelopeToolCallParser",
+          "responded": true,
+          "response_char_len": 2,
+          "response_sha256": "565339bc4d33d72817b583024112eb7f5cdf3e5eef0252d6ec1b9c9a94e12bb3",
+          "target": "qwen-3b",
+          "tool_call_fired": true,
+          "tool_calls_fired": 2,
+          "tool_prompts_tried": 2
+        },
+        {
+          "adapter": "gpt_oss",
+          "blocker": null,
+          "first_tool_name": null,
+          "grader_family": "gpt_oss",
+          "loaded": true,
+          "model_fingerprint_sha256": "6fee5f62b46ae3ce670d16adf253560ff839fd3b4de00eb7289c94558e591982",
+          "model_id": "Qwen/Qwen2.5-3B-Instruct",
+          "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+          "parser_class": "JsonEnvelopeToolCallParser",
+          "responded": true,
+          "response_char_len": 2,
+          "response_sha256": "565339bc4d33d72817b583024112eb7f5cdf3e5eef0252d6ec1b9c9a94e12bb3",
+          "target": "qwen-3b",
+          "tool_call_fired": false,
+          "tool_calls_fired": 0,
+          "tool_prompts_tried": 2
+        }
+      ],
+      "blocker": null,
+      "gpu": {
+        "cuda_available": true,
+        "gpu_name": "NVIDIA GeForce RTX 3080 Ti",
+        "gpu_vram_bytes": 12479758336
+      },
+      "grader_family": "gpt_oss",
+      "model_fingerprint_sha256": "6fee5f62b46ae3ce670d16adf253560ff839fd3b4de00eb7289c94558e591982",
+      "model_id": "Qwen/Qwen2.5-3B-Instruct",
+      "model_revision": "aa8e72537993ba99e69dfaafa59ed015b17504d1",
+      "note": "strong ungated stand-in for the gpt_oss grader family",
+      "started": true,
+      "target": "qwen-3b",
+      "vram_feasible_estimate": true,
+      "weight_bytes": 6171926992
+    }
+  ]
+}
