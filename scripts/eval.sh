@@ -8,6 +8,7 @@
 #   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
 #   scripts/eval.sh real-agent [real-agent args...]  # LLM transfer measurement
 #   scripts/eval.sh real-agent --strong-model qwen-1.5b ... # stronger stand-in
+#   scripts/eval.sh cross-agent --output <path>       # cross-agent transfer matrix
 #   scripts/eval.sh provision-real-grader             # download + GPU smoke test
 #
 # Prefers ./.venv/bin/aicomp; falls back to aicomp on PATH.
@@ -43,11 +44,14 @@ case "$sub" in
   real-agent)
     exec "$PYTHON" scripts/score_real_agent.py "$@"
     ;;
+  cross-agent)
+    exec "$PYTHON" scripts/screen_cross_agent_transfer.py "$@"
+    ;;
   provision-real-grader)
     exec "$PYTHON" scripts/provision_real_grader.py "$@"
     ;;
   *)
-    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent|provision-real-grader} [args...]" >&2
+    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent|cross-agent|provision-real-grader} [args...]" >&2
     exit 2
     ;;
 esac
