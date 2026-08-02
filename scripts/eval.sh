@@ -5,7 +5,8 @@
 #   scripts/eval.sh validate                       # aicomp validate redteam attack.py
 #   scripts/eval.sh test  [extra aicomp args...]   # aicomp test  redteam attack.py ...
 #   scripts/eval.sh evaluate [extra aicomp args...]# aicomp evaluate redteam attack.py ...
-#   scripts/eval.sh proxy all [proxy args...]       # screen, then confirm
+#   scripts/eval.sh proxy all [proxy args...]       # cheap beatable-rules screen filter
+#   scripts/eval.sh gate [gate args...]             # faithful promotion gate (SOT-2320)
 #   scripts/eval.sh real-agent [real-agent args...]  # LLM transfer measurement
 #   scripts/eval.sh real-agent --strong-model qwen-1.5b ... # stronger stand-in
 #   scripts/eval.sh cross-agent --output <path>       # cross-agent transfer matrix
@@ -45,7 +46,18 @@ case "$sub" in
     exec "$AICOMP" evaluate redteam attack.py "$@"
     ;;
   proxy)
+    # Cheap beatable-rules screen. SOT-2320 demoted this to a screen-only filter:
+    # passing the proxy alone does NOT promote. Use `eval.sh gate` for a promotion
+    # decision (integrity -> proxy screen -> optimal_public faithful confirm).
     exec "$PYTHON" scripts/score_proxy.py "$@"
+    ;;
+  gate)
+    # Kaggle-faithful promotion gate (SOT-2320). Runs, in order: (1) exec-compat +
+    # kernel byte-identity guard (SOT-2318), (2) beatable-rules proxy screen, (3) the
+    # optimal_public faithful confirm. Never promotes on proxy-only evidence — the
+    # faithful signal must be non-zero AND strictly better than the champion. Exit 0
+    # promote / 1 reject.
+    exec "$PYTHON" scripts/promotion_gate.py "$@"
     ;;
   real-agent)
     exec "$PYTHON" scripts/score_real_agent.py "$@"
@@ -57,7 +69,7 @@ case "$sub" in
     exec "$PYTHON" scripts/provision_real_grader.py "$@"
     ;;
   *)
-    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|real-agent|cross-agent|provision-real-grader} [args...]" >&2
+    echo "usage: scripts/eval.sh {validate|test|evaluate|proxy|gate|real-agent|cross-agent|provision-real-grader} [args...]" >&2
     exit 2
     ;;
 esac
