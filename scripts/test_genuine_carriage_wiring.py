@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
-"""Assert attack.py's wired genuine-carriage chains are byte-identical to the confirmed vector.
+"""Superseded gate — genuine-carriage wiring is no longer part of the champion.
 
-SOT-2296 promoted the ``exfil_genuine_deferred_genuine_carriage`` vector (native gemma-3-4b-nf4
-grader, adapter-fix OFF, confirmed on disjoint seeds 5/21/44) by wiring its exact steered chains
-into ``attack.py``. This gate pins that wiring to the source of truth — the screen harness's
-``build_screen_vectors`` — so any drift in the preamble or base chains is caught before submit.
+SOT-2296 wired the ``exfil_genuine_deferred_genuine_carriage`` vector into
+``attack.py`` and this gate pinned that wiring byte-for-byte. That lineage was
+**replaced** by the single-message raw-weighted fill champion (adopted from the
+public ``aisec-pilk`` scoring analysis): the champion no longer carries any
+``GENUINE_CARRIAGE_CHAINS``. The genuine-carriage wiring invariant is therefore
+retired. The structural contract of the new champion is pinned by
+``scripts/test_floor_guarantee.py`` (ChampionFillStructureTest) and the
+submission-integrity invariants by ``scripts/test_kernel_payload_identity.py`` /
+``scripts/test_exec_compat.py``.
+
+This file is kept (not deleted) as a tombstone so the retirement is auditable; it
+asserts the pivot actually happened rather than silently passing.
 """
 
 from __future__ import annotations
@@ -14,7 +22,6 @@ import pathlib
 import sys
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 
 def _load_attack_module():
@@ -26,20 +33,15 @@ def _load_attack_module():
 
 
 def main() -> None:
-    from screen_genuine_carriage import build_screen_vectors
-
-    confirmed = build_screen_vectors()["exfil_genuine_deferred_genuine_carriage"]
     attack = _load_attack_module()
-
-    assert attack.GENUINE_CARRIAGE_CHAINS == confirmed, (
-        "attack.py GENUINE_CARRIAGE_CHAINS drifted from the SOT-2296-confirmed vector "
-        "exfil_genuine_deferred_genuine_carriage; re-sync the preamble/base chains."
+    assert not hasattr(attack, "GENUINE_CARRIAGE_CHAINS"), (
+        "attack.py still defines GENUINE_CARRIAGE_CHAINS; the single-message-fill "
+        "pivot expects the genuine-carriage lineage to be gone."
     )
-
-    print(
-        "genuine-carriage wiring: PASS "
-        f"({len(confirmed)} chains byte-identical to the confirmed native vector)"
+    assert hasattr(attack, "TEMPLATES") and hasattr(attack, "PAYLOAD"), (
+        "attack.py is not the single-message-fill champion (missing TEMPLATES/PAYLOAD)."
     )
+    print("genuine-carriage wiring: RETIRED (champion is the single-message fill)")
 
 
 if __name__ == "__main__":
